@@ -113,17 +113,32 @@ end
 action :start do
   service new_resource.name do
     action :start
+    case node['platform']
+      # UBUNTU 14.04
+      when 'debian', 'ubuntu'
+        provider Chef::Provider::Service::Upstart
+    end
   end
 end
 
 action :restart do
   service new_resource.name do
     action :restart
+    case node['platform']
+      # UBUNTU 14.04
+      when 'debian', 'ubuntu'
+        provider Chef::Provider::Service::Upstart
+    end
   end
 end
 
 action :stop do
   service new_resource.name do
     action :stop
+    case node['platform']
+      # UBUNTU 14.04
+      when 'debian', 'ubuntu'
+        provider Chef::Provider::Service::Upstart
+    end
   end
 end
