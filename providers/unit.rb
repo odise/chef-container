@@ -93,7 +93,7 @@ action :remove do
   case node['platform']
     # UBUNTU 14.04
     when 'debian', 'ubuntu'
-      systemd_upstart "#{new_resource.name}.conf" do
+      systemd_upstart "#{new_resource.name}" do
         action :remove
       end
 
@@ -111,34 +111,61 @@ action :remove do
 end
 
 action :start do
-  service new_resource.name do
-    action :start
-    case node['platform']
-      # UBUNTU 14.04
-      when 'debian', 'ubuntu'
-        provider Chef::Provider::Service::Upstart
-    end
+  case node['platform']
+    # UBUNTU 14.04
+    when 'debian', 'ubuntu'
+      systemd_upstart "#{new_resource.name}" do
+        action :start
+      end
+
+    when 'centos'
+      if node['platform_version'].to_f > 6.9
+        systemd_unit "#{new_resource.name}.service" do
+          action :start
+        end
+
+      else
+        fail "Container package for Centos `#{node['platform_version']} is not supported.`"
+      end
   end
 end
 
 action :restart do
-  service new_resource.name do
-    action :restart
-    case node['platform']
-      # UBUNTU 14.04
-      when 'debian', 'ubuntu'
-        provider Chef::Provider::Service::Upstart
-    end
+  case node['platform']
+    # UBUNTU 14.04
+    when 'debian', 'ubuntu'
+      systemd_upstart "#{new_resource.name}" do
+        action :restart
+      end
+
+    when 'centos'
+      if node['platform_version'].to_f > 6.9
+        systemd_unit "#{new_resource.name}.service" do
+          action :restart
+        end
+
+      else
+        fail "Container package for Centos `#{node['platform_version']} is not supported.`"
+      end
   end
 end
 
 action :stop do
-  service new_resource.name do
-    action :stop
-    case node['platform']
-      # UBUNTU 14.04
-      when 'debian', 'ubuntu'
-        provider Chef::Provider::Service::Upstart
-    end
+  case node['platform']
+    # UBUNTU 14.04
+    when 'debian', 'ubuntu'
+      systemd_upstart "#{new_resource.name}.conf" do
+        action :stop
+      end
+
+    when 'centos'
+      if node['platform_version'].to_f > 6.9
+        systemd_unit "#{new_resource.name}.service" do
+          action :stop
+        end
+
+      else
+        fail "Container package for Centos `#{node['platform_version']} is not supported.`"
+      end
   end
 end
