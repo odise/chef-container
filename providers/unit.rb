@@ -7,7 +7,7 @@ use_inline_resources
 action :add do
   case node['platform']
     # UBUNTU 14.04
-    when 'debian', 'ubuntu'
+    when 'debian', 'ubuntu', 'amazon'
 
     systemd_upstart "#{new_resource.name}" do
       if new_resource.depend
@@ -92,7 +92,7 @@ action :remove do
 
   case node['platform']
     # UBUNTU 14.04
-    when 'debian', 'ubuntu'
+    when 'debian', 'ubuntu', 'amazon'
       systemd_upstart "#{new_resource.name}" do
         action :remove
       end
@@ -113,7 +113,7 @@ end
 action :start do
   case node['platform']
     # UBUNTU 14.04
-    when 'debian', 'ubuntu'
+    when 'debian', 'ubuntu', 'amazon'
       systemd_upstart "#{new_resource.name}" do
         action :start
       end
@@ -133,7 +133,7 @@ end
 action :restart do
   case node['platform']
     # UBUNTU 14.04
-    when 'debian', 'ubuntu'
+    when 'debian', 'ubuntu', 'amazon'
       systemd_upstart "#{new_resource.name}" do
         action :restart
       end
@@ -153,7 +153,7 @@ end
 action :stop do
   case node['platform']
     # UBUNTU 14.04
-    when 'debian', 'ubuntu'
+    when 'debian', 'ubuntu', 'amazon'
       systemd_upstart "#{new_resource.name}" do
         action :stop
       end
