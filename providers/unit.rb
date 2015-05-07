@@ -9,7 +9,7 @@ action :add do
     # UBUNTU 14.04
     when 'debian', 'ubuntu'
 
-    systemd_upstart "#{new_resource.name}.conf" do
+    systemd_upstart "#{new_resource.name}" do
       if new_resource.depend
         starton "started #{new_resource.depend}"
         stopon "stopping #{new_resource.depend}"
@@ -37,7 +37,7 @@ action :add do
         action :nothing
       end
 
-      systemd_unit "#{new_resource.name}.service" do
+      systemd_unit "#{new_resource.name}" do
         after "#{new_resource.depend}"
         requires "#{new_resource.depend}"
         execstartpre "-/usr/bin/docker rm -f #{new_resource.name}"
@@ -99,7 +99,7 @@ action :remove do
 
     when 'centos'
       if node['platform_version'].to_f > 6.9
-        systemd_unit "#{new_resource.name}.service" do
+        systemd_unit "#{new_resource.name}" do
           action :remove
         end
 
@@ -120,7 +120,7 @@ action :start do
 
     when 'centos'
       if node['platform_version'].to_f > 6.9
-        systemd_unit "#{new_resource.name}.service" do
+        systemd_unit "#{new_resource.name}" do
           action :start
         end
 
@@ -140,7 +140,7 @@ action :restart do
 
     when 'centos'
       if node['platform_version'].to_f > 6.9
-        systemd_unit "#{new_resource.name}.service" do
+        systemd_unit "#{new_resource.name}" do
           action :restart
         end
 
@@ -154,13 +154,13 @@ action :stop do
   case node['platform']
     # UBUNTU 14.04
     when 'debian', 'ubuntu'
-      systemd_upstart "#{new_resource.name}.conf" do
+      systemd_upstart "#{new_resource.name}" do
         action :stop
       end
 
     when 'centos'
       if node['platform_version'].to_f > 6.9
-        systemd_unit "#{new_resource.name}.service" do
+        systemd_unit "#{new_resource.name}" do
           action :stop
         end
 
