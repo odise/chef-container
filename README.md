@@ -1,42 +1,33 @@
 # container-cookbook
 
-TODO: Enter the cookbook description here.
+Convenience layer to encapsulate systemd and Upstart config files for Docker containers. Depending on the Platform for one or the other will be used to start containers.
+
+Docker environment definitions will be stored in `env-files`.
 
 ## Supported Platforms
 
-TODO: List your supported platforms.
+Ubuntu 14.04, Amazon 2014.09, CentOS 7.1
 
 ## Attributes
 
-<table>
-  <tr>
-    <th>Key</th>
-    <th>Type</th>
-    <th>Description</th>
-    <th>Default</th>
-  </tr>
-  <tr>
-    <td><tt>['container']['bacon']</tt></td>
-    <td>Boolean</td>
-    <td>whether to include bacon</td>
-    <td><tt>true</tt></td>
-  </tr>
-</table>
+see `attributes/default.rb` file
 
 ## Usage
 
-### container::default
+The cookbook implements `unit` LWPR to define container units. `systemd-cookbook::unit` and `systemd-cookbook::upstart` LWPRs will be used depending on the platform.
 
-Include `container` in your node's `run_list`:
-
-```json
-{
-  "run_list": [
-    "recipe[container::default]"
-  ]
-}
+```
+container_unit 'logspout' do
+    depend ["docker"]
+    volumes "-v /var/run/docker.sock:/tmp/docker.sock"
+    ports "--publish=80:8000"
+    image "gliderlabs/logspout"
+end
+container_unit 'logspout' do
+	action [:add, :remove, :start, :stop, :restart]
+end
 ```
 
 ## License and Authors
 
-Author:: YOUR_NAME (<YOUR_EMAIL>)
+Author:: Jan Nabbefeld

@@ -1,4 +1,3 @@
-default["container"]["environment_file"]["path"] = "/etc/init"
 default["container"]["environment_file"]["create"] = true
 default["container"]["environment_file"]["owner"] = "root"
 default["container"]["environment_file"]["group"] = "root"
