@@ -11,8 +11,8 @@ action :add do
 
     systemd_upstart "#{new_resource.name}" do
       if new_resource.depend
-        starton "started #{new_resource.depend}"
-        stopon "stopping #{new_resource.depend}"
+        starton new_resource.depend
+        stopon new_resource.depend
       end
       execstartpre "exec sh -c \"/usr/bin/docker rm -f #{new_resource.name} || true\""
       execstart <<-EOF
@@ -38,8 +38,8 @@ action :add do
       end
 
       systemd_unit "#{new_resource.name}" do
-        after "#{new_resource.depend}"
-        requires "#{new_resource.depend}"
+        after new_resource.depend
+        requires new_resource.depend
         execstartpre "-/usr/bin/docker rm -f #{new_resource.name}"
         execstart <<-EOF
           /usr/bin/docker run --name #{new_resource.name} --rm \

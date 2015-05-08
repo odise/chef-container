@@ -3,7 +3,7 @@ default_action :add if defined?(default_action)
 
 attribute :name, :kind_of => String, :name_attribute => true
 
-attribute :depend, :kind_of => String, :required => false
+attribute :depend, :kind_of => Array, :required => false
 
 attribute :environment, :kind_of => Array, :required => false, :default => []
 attribute :ports, :kind_of => String, :required => false, :default => ""
