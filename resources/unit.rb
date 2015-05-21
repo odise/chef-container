@@ -1,4 +1,4 @@
-actions :add, :remove, :start, :restart, :stop, :enable, :disable
+actions :add, :remove, :start, :restart, :stop, :enable, :disable, :update_image
 default_action :add if defined?(default_action)
 
 attribute :name, :kind_of => String, :name_attribute => true
