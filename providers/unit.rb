@@ -29,6 +29,14 @@ action :add do
       execstoppost "exec sleep 5"
     end
 
+    # update container image
+    systemd_upstart "#{new_resource.name}-update" do
+      oneshot true
+      execstart <<-EOF
+        /usr/bin/docker pull #{new_resource.image}
+      EOF
+    end
+
   when 'centos'
     if node['platform_version'].to_f > 6.9
 
@@ -54,6 +62,14 @@ action :add do
         restart 'always'
         timeoutstartsec '0'
         notifies :run, 'execute[systemctl-daemon-reload]', :delayed
+      end
+
+      # update container image
+      systemd_upstart "#{new_resource.name}-update" do
+        oneshot true
+        execstart <<-EOF
+          /usr/bin/docker pull #{new_resource.image}
+        EOF
       end
     else
       fail "Container package for Centos `#{node['platform_version']} is not supported.`"
@@ -162,6 +178,26 @@ action :stop do
       if node['platform_version'].to_f > 6.9
         systemd_unit "#{new_resource.name}" do
           action :stop
+        end
+
+      else
+        fail "Container package for Centos `#{node['platform_version']} is not supported.`"
+      end
+  end
+end
+
+action :update_image do
+  case node['platform']
+    # UBUNTU 14.04
+    when 'debian', 'ubuntu', 'amazon'
+      systemd_upstart "#{new_resource.name}-update" do
+        action :start
+      end
+
+    when 'centos'
+      if node['platform_version'].to_f > 6.9
+        systemd_unit "#{new_resource.name}-update" do
+          action :start
         end
 
       else
