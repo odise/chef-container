@@ -17,7 +17,8 @@ action :add do
       execstartpre "exec sh -c \"/usr/bin/docker rm -f #{new_resource.name} || true\""
       execstart <<-EOF
         /usr/bin/docker run --name #{new_resource.name} --rm \
-          --env-file=#{node["container"]["environment_file"]["path"]}/#{new_resource.name} #{new_resource.extra} \
+          --env-file=#{node["container"]["environment_file"]["path"]}/#{new_resource.name} \
+          #{new_resource.extra} \
           #{new_resource.volumes} \
           #{new_resource.ports} \
           #{new_resource.link} \
@@ -51,7 +52,8 @@ action :add do
         execstartpre "-/usr/bin/docker rm -f #{new_resource.name}"
         execstart <<-EOF
           /usr/bin/docker run --name #{new_resource.name} --rm \
-            --env-file=#{node["container"]["environment_file"]["path"]}/#{new_resource.name} #{new_resource.extra} \
+            --env-file=#{node["container"]["environment_file"]["path"]}/#{new_resource.name} \
+            #{new_resource.extra} \
             #{new_resource.volumes} \
             #{new_resource.ports} \
             #{new_resource.link} \
@@ -65,7 +67,7 @@ action :add do
       end
 
       # update container image
-      systemd_upstart "#{new_resource.name}-update" do
+      systemd_unit "#{new_resource.name}-update" do
         oneshot true
         execstart <<-EOF
           /usr/bin/docker pull #{new_resource.image}
